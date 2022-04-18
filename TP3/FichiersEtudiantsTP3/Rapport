@@ -1,0 +1,102 @@
+PARTIE 2
+
+1.
+SELECT ?nomFilm
+WHERE {
+  ?film :seDerouleA ?lieu.
+  ?lieu :aPourGPS ?gps.
+  ?film rdfs:label ?nomFilm.
+}
+
+
+2.
+SELECT ?gps (GROUP_CONCAT(?nomFilm;separator="|") as ?nom) (COUNT(?film) as ?nbFilms) 
+WHERE {
+  ?film :seDerouleA ?lieu.
+  ?lieu :aPourGPS ?gps.
+  ?film rdfs:label ?nomFilm.
+}
+GROUP BY ?gps 
+
+3.
+SELECT ?gps (GROUP_CONCAT(?nomFilm; separator="   ***   ") as ?nom)(COUNT(?film) as ?nbFilms) 
+WHERE {
+  ?film :seDerouleA ?lieu.
+  ?lieu :aPourGPS ?gps.
+  ?film a ?classe.
+  ?classe rdfs:label "film populaire"@fr.
+  ?film rdfs:label ?nomFilm.
+}
+GROUP BY ?gps 
+
+4.
+SELECT DISTINCT ?genres
+WHERE {
+  ?film :aPourGenre ?genres.
+}
+
+5.
+SELECT ?gps (GROUP_CONCAT(?nomFilm; separator="   ***   ") as ?nom)(COUNT(?film) as ?nbFilms) 
+WHERE {
+  ?film :seDerouleA ?lieu.
+  ?lieu :aPourGPS ?gps.
+  ?film :aPourGenre ?genre.
+  ?genre rdfs:label "romance"@fr.
+  ?film rdfs:label ?nomFilm.
+}
+GROUP BY ?gps 
+
+6.
+SELECT ?gps (GROUP_CONCAT(?nomFilm; separator="   ***   ") as ?nom)(COUNT(?film) as ?nbFilms) 
+WHERE {
+  ?film :seDerouleA ?lieu.
+  ?lieu :aPourGPS ?gps.
+  ?film rdfs:label ?nomFilm.
+}
+GROUP BY ?gps 
+HAVING (?nbFilms>=3)
+
+PARTIE 3
+
+2.
+ASK
+{
+  ?lieu rdfs:label "Montpellier"@fr.
+  ?lieu :aPourGPS ?gps.
+}
+
+3.
+INSERT {
+  ?lieu :aPourGPS "43.61092,3.87723".
+}
+
+WHERE{
+      ?lieu rdfs:label "Montpellier"@fr.
+}
+
+4.
+ON A MONTPELLIEEEEEEEEEEEER
+
+5.
+DELETE{
+?film :seDerouleA ?ville.
+?film :seDerouleA ?belgique.
+}
+
+INSERT{
+?film :seDerouleA peup:NewYork.
+peup:NewYork rdfs:label "New York"@fr.
+peup:NewYork :aPourGPS "40.74907140090576, -73.98553336334267"
+}
+WHERE{
+?belgique rdfs:label "Belgique"@fr.
+?ville :seSitueDans ?belgique.
+?film :seDerouleA ?ville.
+?film rdfs:label "Broken English"@fr.
+}
+
+PARTIE 4
+
+
+
+

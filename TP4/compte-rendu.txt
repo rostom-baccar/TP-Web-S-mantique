@@ -1,0 +1,80 @@
+ sur http://fr.dbpedia.org/sparql
+
+
+SELECT * WHERE {
+<http://fr.dbpedia.org/resource/D'Artagnan_(film)> ?prop ?objet
+}
+
+
+------------------------------------------
+
+SELECT * WHERE {
+ ?film rdfs:label "D'Artagnan"@fr  //on tombe sur le perso historique
+}
+---------------------------------------
+
+SELECT * WHERE {
+ ?film rdfs:label "D'Artagnan (film)"@fr  
+}
+------------------------------------------
+SELECT * WHERE {
+ ?film prop-fr:titre "D'Artagnan"@fr
+}
+
+-----------------------------------------
+SELECT * WHERE {
+ <http://fr.dbpedia.org/resource/D'Artagnan_(film)> ?prop <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>
+}
+-----------------------------------------
+SELECT * WHERE {
+{?film <http://purl.org/dc/terms/subject> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+UNION
+{?film <http://dbpedia.org/ontology/wikiPageWikiLink> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+}
+------------------------------------------------
+SELECT * WHERE {
+{?film <http://purl.org/dc/terms/subject> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+UNION
+{?film <http://dbpedia.org/ontology/wikiPageWikiLink> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+?film <http://fr.dbpedia.org/property/genre> ?genre.
+?film <http://fr.dbpedia.org/property/titre> ?titre.
+}
+
+-------------------------------------------------------
+SELECT DISTINCT * WHERE {
+{?film <http://purl.org/dc/terms/subject> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+UNION
+{?film <http://dbpedia.org/ontology/wikiPageWikiLink> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+?film <http://fr.dbpedia.org/property/genre> ?genre.
+?genre rdfs:label ?nomGenre.
+?film <http://fr.dbpedia.org/property/titre> ?titre.
+FILTER(LANGMATCHES(LANG(?nomGenre),"fr")).
+}
+-------------------------------------------------------
+
+//sur fuseki:
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX peup: <http://www.semanticweb.org/nathalie/ontologies/cinemaTPpeup#>
+PREFIX :<http://www.semanticweb.org/nathalie/ontologies/cinemaTP#>
+PREFIX prop-fr: <http://fr.dbpedia.org/property/>
+DELETE{?film :seDerouleA peup:Toulouse}
+INSERT {
+  ?film :seDerouleA peup:Toulouse.
+  ?film :aPourGenre ?genre.
+  ?film rdfs:label ?nomFilm.
+  peup:Toulouse :aPourGPS "4356899".
+  ?film a ?classe.
+  ?classe rdfs:label "film"@fr.
+}
+      WHERE{
+      SERVICE<http://fr.dbpedia.org/sparql>{
+      {?film <http://purl.org/dc/terms/subject> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+UNION
+{?film <http://dbpedia.org/ontology/wikiPageWikiLink> <http://fr.dbpedia.org/resource/Catégorie:Film_tourné_à_Toulouse>}
+      ?film <http://fr.dbpedia.org/property/titre> ?nomFilm.
+      ?film <http://fr.dbpedia.org/property/genre> ?ressourceGenre.
+      ?ressourceGenre rdfs:label ?genre.
+}
+}
+
+
